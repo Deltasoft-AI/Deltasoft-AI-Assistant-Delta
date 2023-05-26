@@ -23,7 +23,7 @@ module.exports = {
       ],
       image: {
         url: 'https://i.ibb.co/L54bfvs/reset.png',
-      }
+      },
       timestamp: new Date().toISOString(),
     };
   
