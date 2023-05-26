@@ -21,6 +21,9 @@ module.exports = {
           value: 'Your chat history has been cleared and the bot will forget this conversation.',
         },
       ],
+      image: {
+        url: 'https://i.ibb.co/L54bfvs/reset.png',
+      }
       timestamp: new Date().toISOString(),
     };
   
