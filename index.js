@@ -56,9 +56,7 @@ client.on('ready', () => {
 
 const db = require('replitdb-client');
 
-const dbClient = new db('https://kv.replit.com/v0/eyJhbGciOiJIUzUxMiIsImlzcyI6ImNvbm1hbiIsImtpZCI6InByb2Q6MSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjb25tYW4iLCJleHAiOjE2ODQ1NTc2NjUsImlhdCI6MTY4NDQ0NjA2NSwiZGF0YWJhc2VfaWQiOiI2ODZmMjAzYS1mMzZhLTRlZTUtYjQwNy0yZjgyZTRhYmY4MzQiLCJ1c2VyIjoiRmlnaThDYWtlIiwic2x1ZyI6IkpzbWFuLUJvdCJ9.w00u5JZuDPLXQ7sOYufaKASUUMwcWiUAt6xcZmereq3UkFX7Oxa5GA4iUBIXSPqDeNvHPls1mDcuC9q-NXxnOw');
-
-
+const dbClient = new db('https://kv.replit.com/v0/eyJhbGciOiJIUzUxMiIsImlzcyI6ImNvbm1hbiIsImtpZCI6InByb2Q6MSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjb25tYW4iLCJleHAiOjE2ODUyNDc1ODQsImlhdCI6MTY4NTEzNTk4NCwiZGF0YWJhc2VfaWQiOiI2ODZmMjAzYS1mMzZhLTRlZTUtYjQwNy0yZjgyZTRhYmY4MzQiLCJ1c2VyIjoiRmlnaThDYWtlIiwic2x1ZyI6IkpzbWFuLUJvdCJ9.KxNYI4ewByZ2LSSuHQ2uvcu6vIHxSTkzuqoZ36G40PaBLC-zDeyCpiPcQBGr6AvpaPt5PDUwsvHkl2XzoCxACg');
 
 
 //dbClient.empty();
@@ -78,7 +76,6 @@ var starting = "Your name is Deltasoft AI, you are one of the most intelligent A
 
 
 const { Poe } = require("@lazuee/poe.js");
-
 const poe = new Poe({
   // See: https://github.com/ading2210/poe-api#finding-your-token
   // Array of token! If the token got ratelimit, it will move to the last of the array.
@@ -94,7 +91,6 @@ const poe = new Poe({
     count: 1000 // default: 50
   }
 });
-
 
 const chunkSize = 2000; // Maximum character limit per Discord message
 const delayBetweenChunks = 10; // Delay in milliseconds between sending each message
