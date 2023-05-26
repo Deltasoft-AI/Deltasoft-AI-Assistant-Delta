@@ -115,7 +115,7 @@ async function fetchAPI(question, message1) {
   var conversationHistory = [];
   try {
     var value = await dbClient.get(message1.author.id);
-    if (value != null) {
+    if (Array.isArray(value)) {
       conversationHistory = value;
     }
   } catch (error) {
@@ -273,7 +273,7 @@ async function dmFetchAPI(question, message1) {
   var conversationHistory = [];
   try {
     var value = await dbClient.get(message1.author.id);
-    if (value != null) {
+    if (Array.isArray(value)) {
       conversationHistory = value;
     }
   } catch (error) {
