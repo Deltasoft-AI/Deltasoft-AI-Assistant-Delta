@@ -1,4 +1,3 @@
-require('dotenv').config();
 // Require necessary files
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
