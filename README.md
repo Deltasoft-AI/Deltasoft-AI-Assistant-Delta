@@ -7,31 +7,9 @@ Deltasoft AI is an advanced artificial intelligence system developed by [@JSman2
 
 - [@JSman225](https://www.github.com/jsman225)
 
-
-## Screenshots
-
-![App Screenshot](https://i.ibb.co/mTvLZXy/awesdrtfgh.png)
-#### Deltas can handle long continuous conversations
-![App Screenshot](https://i.ibb.co/FDszS7F/retyuik.png)
-
-
-![Logo](https://i.ibb.co/Csqjrbp/Group-3-1.png)
-
-
 ## Support
 
-For support, email deltasoftai@gmail.com or join our Discord server.
+ - delta@deltasoftai.com
+ - contact@deltasoftai.com
 
-
-## FAQ
-
-#### Does Deltasoft AI have  rate limit?
-
-Yes. In order to keep Deltasoft AI free for all, the longer your conversation gets, the longer your rate limit is.
-
-This is because Deltasoft AI needs more time, and resources to analyze a large conversation. To clear and start a new conversation, at any use the `/clear` command.
-
-#### Is Deltasoft AI based of ChatGPT?
-
-Kinda. We use OpenAI's API, which is the same parent company that runs ChatGPT. While they are similar, Deltasoft AI offers many more advantages, such as the convenince of being right their in your discord DM's, has less restrictions then ChatGPT, and gets less traffic, so the responces are higher quality, and faster.
-
+Our join our [discord server](https://discord.gg/AxUTv9Actu)!
