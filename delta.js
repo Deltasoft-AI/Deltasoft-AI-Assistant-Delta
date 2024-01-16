@@ -17,11 +17,32 @@ const fs = require("node:fs");
 const fsPromises = require("fs").promises;
 const path = require("node:path");
 require("dotenv").config();
-const { MongoClient } = require("mongodb");
-// Replace the uri string with your connection string.
-const uri = process.env.MONGODB_URI;
-const dbClient = new MongoClient(uri);
-const db = dbClient.db(process.env.MONGODB_DB);
+const { createClient } = require('redis');
+
+const db = createClient({
+    password: process.env.REDIS_PW,
+    socket: {
+        host: 'redis-15284.c321.us-east-1-2.ec2.cloud.redislabs.com',
+        port: 15284
+    }
+});
+
+async function connectDb() {
+    await db.connect();
+} connectDb();
+
+async function getDb(input) {
+    const value = await db.get(input);
+    return JSON.parse(value);
+}
+
+async function test() {
+    //console.log((await getDb('916043469552758784')));
+    //await db.connect();
+    //await db.set('916043469552758784',JSON.stringify(json))
+    //const value = await db.get('916043469552758784');
+    // console.log(JSON.parse(value));
+} test();
 
 const OpenAI = require("openai");
 
@@ -56,7 +77,7 @@ client.on("interactionCreate", async (interaction) => {
 
     const command = client.commands.get(interaction.commandName);
 
-    console.log('-- ' + interaction.user.tag + ' used /' + interaction.commandName)
+    console.log('-- ' + interaction.user.username + ' used /' + interaction.commandName)
 
     if (!command) return;
 
@@ -110,7 +131,7 @@ async function handleDirectMessage(message) {
     } else {
         message.channel.sendTyping();
         let content = await generate(message.content, message);
-        if (content.length > 2000){
+        if (content.length > 2000) {
             const file = new MessageAttachment(Buffer.from(content), `output.txt`);
             message.channel.send({
                 content:
@@ -118,7 +139,7 @@ async function handleDirectMessage(message) {
                 files: [file]
             }
             )
-        } else{
+        } else {
             message.channel.send(content);
         }
     }
@@ -135,7 +156,7 @@ async function handleChannelMessage(message) {
     } else {
         message.channel.sendTyping();
         let content = await generate(message.content, message);
-        if (content.length > 2000){
+        if (content.length > 2000) {
             const file = new MessageAttachment(Buffer.from(content), `output.txt`);
             message.channel.send({
                 content:
@@ -143,7 +164,7 @@ async function handleChannelMessage(message) {
                 files: [file]
             }
             )
-        } else{
+        } else {
             message.channel.send(content);
         }
     }
@@ -151,33 +172,42 @@ async function handleChannelMessage(message) {
 
 
 // START GENERATE FUNCTION
-const assistantId_beta_freeTier = process.env.assistantId_beta_freeTier;
+const assistantId_standard = process.env.assistantId_standard;
+const assistantId_plus = process.env.assistantId_plus;
+const assistantId_creative = process.env.assistantId_creative;
+const assistantId_pro = process.env.assistantId_pro;
 
 
 
 const generate = async (userInput, message) => {
-    const userData = await fsPromises.readFile(
-        "./users.json",
-        "utf8"
-    );
-    let userInfo = JSON.parse(userData);
+    let userInfo = await getDb(message.author.id)
+    //console.log(userInfo);
     let thread;
     let details = null;
-    if (userInfo[message.author.id]) {
-        thread = await openai.beta.threads.retrieve(
-            userInfo[message.author.id]
-        );
-    } else {
+    if (userInfo == null) {
         thread = await openai.beta.threads.create();
         details = "User Info: Username: " + message.author.username + ". To ping the user, type: <@" + message.author.id + ">. This user has the Free Tier. They can upgrade for more features."
-        let newUserInfo = {
-            [message.author.id]: thread.id,
-            ...userInfo
+        const json = {
+            "id": message.author.id,
+            "preferred_model": "gpt-3.5",
+            "username": message.author.username,
+            "tier": "standard",
+            "thread_id": thread.id
         }
-        await fsPromises.writeFile(
-            "./users.json",
-            JSON.stringify(newUserInfo, null, 2)
+        db.set(message.author.id, JSON.stringify(json))
+    } else if (userInfo.thread_id == null) {
+        thread = await openai.beta.threads.create();
+        details = "You are talking to " + message.author.username + ". To ping the user, type: <@" + message.author.id + ">"
+       // console.log('old thread:' + JSON.stringify(userInfo, null, 4));
+        userInfo.thread_id = thread.id;
+       // console.log('new thread:' + JSON.stringify(userInfo, null, 4));
+        db.set(message.author.id, JSON.stringify(userInfo))
+    } else if (userInfo.thread_id != null) {
+        thread = await openai.beta.threads.retrieve(
+            userInfo.thread_id
         );
+    } else {
+        console.log('an unexpected error occured');
     }
 
     await openai.beta.threads.messages.create(thread.id, {
@@ -186,7 +216,7 @@ const generate = async (userInput, message) => {
     });
 
     const run = await openai.beta.threads.runs.create(thread.id, {
-        assistant_id: assistantId_beta_freeTier,
+        assistant_id: assistantId_standard,
         additional_instructions: details
     });
 
@@ -203,7 +233,7 @@ const generate = async (userInput, message) => {
             run.id
         );
         console.log(runStatus.status);
-        if (runStatus.status == "in_progress"){
+        if (runStatus.status == "in_progress") {
             message.channel.sendTyping();
         }
         // Check for failed, cancelled, or expired status
@@ -214,6 +244,12 @@ const generate = async (userInput, message) => {
             break; // Exit the loop if the status indicates a failure or cancellation
         }
     }
+
+    /* const runStep = await openai.beta.threads.runs.steps.retrieve(
+         thread.id,
+         run.id
+     );
+     console.log(runStep);*/
 
     // Get the last assistant message from the messages array
     const messages = await openai.beta.threads.messages.list(thread.id);
