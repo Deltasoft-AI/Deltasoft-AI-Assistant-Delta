@@ -11,16 +11,9 @@ const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-  if (file !== 'ask-deltasoft.js') { // Exclude the specific command
-    const command = require(`./commands/${file}`);
-    commands.push(command.data.toJSON());
-  }
+  const command = require(`./commands/${file}`);
+  commands.push(command.data.toJSON());
 }
-/*
-const specificCommand = require('./commands/ask-deltasoft.js'); // Update the path
-const guildId = '1081208082530570240'; // Replace with the actual guild ID
-console.log(clientId);
-*/
 
 // Register the commands
 const rest = new REST({ version: '9' }).setToken(token);
@@ -36,20 +29,6 @@ const rest = new REST({ version: '9' }).setToken(token);
   } catch (error) {
     console.error(error);
   }
-  /*
-  try {
-    console.log(`Deploying specific command to guild ${guildId}.`);
-
-    await rest.put(
-      Routes.applicationGuildCommands(clientId, guildId),
-      { body: [specificCommand.data.toJSON()] },
-    );
-
-    console.log(`Successfully deployed specific command to guild ${guildId}.`);
-  } catch (error) {
-    console.error(error);
-  }
-  */
 })();
 
 // Use Routes.applicationCommands(clientId) to register global commands (NOTE: global commands take ONE HOUR to update)
